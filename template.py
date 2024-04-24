@@ -8,7 +8,7 @@ logging.basicConfig(
     level= logging.INFO
 )
 
-project_name = "MLOps_wine"
+project_name = "MLOps_wine" ## this is not really nessesary.
 
 list_of_files = [
     f"src/{project_name}/__init__.py",
