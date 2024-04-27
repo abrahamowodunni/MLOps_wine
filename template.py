@@ -33,14 +33,16 @@ list_of_files = [
 ]
 
 for filepath in list_of_files:
-    filepath = Path(filepath)
+    filepath = Path(filepath) # we want the delimiter we are using to seperate the paths to conform with out machine. 
 
     filedir, filename = os.path.split(filepath) # this helps to split folder and file
 
+    # creating the file directory first then....
     if filedir !="":
         os.makedirs(filedir, exist_ok=True)
         logging.info(f"Creating directory; {filedir} for the file: {filename}")
 
+    # creating the file names. 
     if (not os.path.exists(filepath)) or (os.path.getsize(filepath) == 0):
         with open(filepath, "w") as f:
             pass
