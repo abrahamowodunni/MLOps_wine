@@ -14,15 +14,15 @@ class ModelTrainer:
         train_data = pd.read_csv(self.config.train_data_path)
         test_data = pd.read_csv(self.config.test_data_path)
 
-        oe = OrdinalEncoder()
-        train_data[self.config.target_column] = oe.fit_transform(train_data[[self.config.target_column]])
-        test_data[self.config.target_column] = oe.transform(test_data[[self.config.target_column]])
+        label_mapping = {'low': 0, 'medium': 1, 'high': 2}
+        train_data[self.config.target_column] = train_data[self.config.target_column].map(label_mapping)
+        test_data[self.config.target_column] = test_data[self.config.target_column].map(label_mapping)
 
 
         train_x = train_data.drop([self.config.target_column], axis=1)
         test_x = test_data.drop([self.config.target_column], axis=1)
-        train_y = train_data[[self.config.target_column]]
-        test_y = test_data[[self.config.target_column]]
+        train_y = train_data[self.config.target_column]
+        test_y = test_data[self.config.target_column]
 
 
         lr = LogisticRegression(C=self.config.C,solver=self.config.solver, random_state=42)
