@@ -5,6 +5,8 @@ from src.MLOps_wine import logger
 from src.MLOps_wine.utils.common import get_size
 from src.MLOps_wine.entity.config_entity import DataIngestionConfig
 from pathlib import Path
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 
 ## we create the constructor first
 class DataIngestion:

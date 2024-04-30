@@ -1,7 +1,8 @@
 from src.MLOps_wine.constants import *
 from src.MLOps_wine.utils.common import read_yaml, create_directories
 from src.MLOps_wine.entity.config_entity import (DataIngestionConfig,
-                                                 DataValidationConfig)
+                                                 DataValidationConfig,
+                                                 DataTransformationConfig)
 
 class ConfigurationManager:
     def __init__(
@@ -46,3 +47,20 @@ class ConfigurationManager:
         )
 
         return data_validation_config
+    
+    def get_data_transformation_config(self) -> DataTransformationConfig:
+        config = self.config.data_transformation
+        schema = self.schema.TARGET_COLUMN
+
+        create_directories([config.root_dir])
+
+        data_transformation_config = DataTransformationConfig(
+            root_dir=config.root_dir,
+            data_path=config.data_path,
+            test_size= config.test_size,
+            bins=config.bins,
+            labels=config.labels,
+            target_column= schema.name
+        )
+
+        return data_transformation_config
