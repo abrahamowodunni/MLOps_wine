@@ -23,21 +23,23 @@ class DataTransformation:
 
         data[self.config.target_column] = pd.cut(data[self.config.target_column],bins=bins, labels=labels, include_lowest=True)
 
-        numeric_features = ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'free sulfur dioxide', 'total sulfur dioxide', 'density', 'pH', 'sulphates', 'alcohol']
+        numeric_features = list(train.select_dtypes(exclude="object").columns)
+        numeric_features.remove('quality')
         numeric_transformer = StandardScaler()
         preprocessor = ColumnTransformer(
             [
                 ("StandardScaler", numeric_transformer, numeric_features)
+                
             ]
         )
 
         # Fit preprocessor on training data and transform both train and test data
-        train = preprocessor.fit_transform(train)
-        test = preprocessor.transform(test)
+        train_ = preprocessor.fit_transform(train.drop(self.config.target_column,axis=1))
+        test_ = preprocessor.transform(test.drop(self.config.target_column,axis=1))
 
         # Convert transformed arrays back to DataFrame
-        train = pd.DataFrame(train, columns=numeric_features)
-        test = pd.DataFrame(test, columns=numeric_features)
+        train = pd.DataFrame(train_, columns=numeric_features)
+        test = pd.DataFrame(test_, columns=numeric_features)
 
         # Concatenate the target column to the DataFrame
         train[self.config.target_column] = data.loc[train.index, self.config.target_column]
@@ -56,5 +58,3 @@ class DataTransformation:
         print(f"Data split into training and test sets (test_size: {self.config.test_size})")
         print(f"Training features shape: {train.shape}")
         print(f"Test features shape: {test.shape}")
-        print(f'number of columns {numeric_features}')
-    

@@ -12,6 +12,6 @@ class PredictionPipeline:
     
     def predict(self, data):
         preprocessed_data = self.preprocessor.transform(data)
-        prediction = self.model.predict(preprocessed_data)
+        prediction = self.model.predict_proba(preprocessed_data)
 
         return prediction

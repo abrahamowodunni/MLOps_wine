@@ -38,15 +38,31 @@ def index():
             pH =float(request.form['pH'])
             sulphates =float(request.form['sulphates'])
             alcohol =float(request.form['alcohol'])
-       
-         
-            data = [fixed_acidity,volatile_acidity,citric_acid,residual_sugar,chlorides,free_sulfur_dioxide,total_sulfur_dioxide,density,pH,sulphates,alcohol]
-            data = np.array(data).reshape(1, -1)
-            
-            obj = PredictionPipeline()
-            predict = obj.predict(data)
+        
+            # Create a DataFrame with user input
+            data_df = pd.DataFrame({
+                "fixed acidity": [fixed_acidity],
+                "volatile acidity": [volatile_acidity],
+                "citric acid": [citric_acid],
+                "residual sugar": [residual_sugar],
+                "chlorides": [chlorides],
+                "free sulfur dioxide": [free_sulfur_dioxide],
+                "total sulfur dioxide": [total_sulfur_dioxide],
+                "density": [density],
+                "pH": [pH],
+                "sulphates": [sulphates],
+                "alcohol": [alcohol],
+            })
 
-            return render_template('results.html', prediction = str(predict))
+            # Prediction
+            obj = PredictionPipeline()
+            predict = obj.predict(data_df)
+            predicted_class_index = np.argmax(predict, axis=1)[0]
+
+            quality_labels = ["That is a low quality wine", "That is a medium quality wine", "That is a high quality wine"]  # Assuming these are your class labels
+            predicted_quality = quality_labels[predicted_class_index]
+
+            return render_template('results.html', prediction = predicted_quality)
 
         except Exception as e:
             print('The Exception message is: ',e)
